@@ -13,6 +13,8 @@ using Microsoft.EntityFrameworkCore;
 using TweetBook_NetCore_REST_API.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using TweetBook_NetCore_REST_API.Options;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace TweetBook_NetCore_REST_API
 {
@@ -35,6 +37,11 @@ namespace TweetBook_NetCore_REST_API
                 .AddEntityFrameworkStores<DataContext>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddSwaggerGen(x =>
+            {
+                x.SwaggerDoc("v1", new Info { Title = "TweetBook", Version = "v1" });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,6 +55,15 @@ namespace TweetBook_NetCore_REST_API
             {
                 app.UseHsts();
             }
+
+            var swaggerOptions = new Options.SwaggerOptions();
+            Configuration.GetSection(nameof(Options.SwaggerOptions)).Bind(swaggerOptions);
+
+            app.UseSwagger(option => { option.RouteTemplate = swaggerOptions.JsonRoute; });
+            app.UseSwaggerUI(option =>
+            {
+                option.SwaggerEndpoint(swaggerOptions.UIEndPoint, swaggerOptions.Description);
+            });
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
