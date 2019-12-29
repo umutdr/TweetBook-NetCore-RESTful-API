@@ -7,6 +7,6 @@ namespace TweetBook_NetCore_REST_API.Contracts.Responses
 {
     public class PostResponse
     {
-        public string Id { get; set; }
+        public Guid Id { get; set; }
     }
 }

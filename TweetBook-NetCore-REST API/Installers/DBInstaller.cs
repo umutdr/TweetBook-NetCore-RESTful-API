@@ -7,18 +7,22 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TweetBook_NetCore_REST_API.Data;
+using TweetBook_NetCore_REST_API.Services;
 
 namespace TweetBook_NetCore_REST_API.Installers
 {
     public class DBInstaller : IInstaller
     {
-        public void InstallServices(IServiceCollection Services, IConfiguration Configuration)
+        public void InstallServices(IServiceCollection services, IConfiguration configuration)
         {
-            Services.AddDbContext<DataContext>(options =>
+            services.AddDbContext<DataContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
-            Services.AddDefaultIdentity<IdentityUser>()
+                    configuration.GetConnectionString("DefaultConnection")));
+            services.AddDefaultIdentity<IdentityUser>()
                 .AddEntityFrameworkStores<DataContext>();
+
+            services.AddSingleton<IPostService, PostService>();
         }
+
     }
 }
