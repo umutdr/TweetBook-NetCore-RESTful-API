@@ -25,6 +25,23 @@ namespace TweetBook.Controllers.V1
             return Ok(_postService.GetPosts());
         }
 
+        [HttpPut(ApiRoutes.Posts.Update)]
+        public IActionResult Update([FromRoute]Guid postId, [FromBody] UpdatePostRequest request)
+        {
+            var post = new Post
+            {
+                Id = postId,
+                Name = request.Name,
+            };
+
+            var updated = _postService.UpdatePost(post);
+
+            if (updated)
+                return Ok(_postService);
+
+            return NotFound();
+        }
+
         [HttpGet(ApiRoutes.Posts.Get)]
         public IActionResult Get([FromRoute]Guid postId)
         {
@@ -39,7 +56,8 @@ namespace TweetBook.Controllers.V1
         [HttpPost(ApiRoutes.Posts.Create)]
         public IActionResult Create([FromBody] CreatePostRequest postRequest)
         {
-            var post = new Post { Id = postRequest.Id };
+            //var post = new Post { Id = postRequest.Id};
+            var post = new Post { Id = postRequest == null ? Guid.NewGuid() : postRequest.Id };
 
             if (post.Id != Guid.Empty)
             {
@@ -51,7 +69,7 @@ namespace TweetBook.Controllers.V1
 
             var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.ToUriComponent()}";
             var locationUri = baseUrl + "/" + ApiRoutes.Posts.Get.Replace("{postId}", post.Id.ToString());
-            var response = new PostResponse { Id = post.Id};
+            var response = new PostResponse { Id = post.Id };
 
             return Created(locationUri, response);
         }
