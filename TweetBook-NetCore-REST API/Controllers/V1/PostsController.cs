@@ -19,6 +19,17 @@ namespace TweetBook.Controllers.V1
             _postService = postService;
         }
 
+        [HttpGet(ApiRoutes.Posts.Get)]
+        public IActionResult Get([FromRoute]Guid postId)
+        {
+            var post = _postService.GetPostById(postId);
+
+            if (post == null)
+                return NotFound();
+
+            return Ok(_postService);
+        }
+
         [HttpGet(ApiRoutes.Posts.GetAll)]
         public IActionResult GetAll()
         {
@@ -42,17 +53,6 @@ namespace TweetBook.Controllers.V1
             return NotFound();
         }
 
-        [HttpGet(ApiRoutes.Posts.Get)]
-        public IActionResult Get([FromRoute]Guid postId)
-        {
-            var post = _postService.GetPostById(postId);
-
-            if (post == null)
-                return NotFound();
-
-            return Ok(_postService);
-        }
-
         [HttpPost(ApiRoutes.Posts.Create)]
         public IActionResult Create([FromBody] CreatePostRequest postRequest)
         {
@@ -73,5 +73,17 @@ namespace TweetBook.Controllers.V1
 
             return Created(locationUri, response);
         }
+
+        [HttpDelete(ApiRoutes.Posts.Delete)]
+        public IActionResult Delete([FromRoute]Guid postId)
+        {
+            var deleted = _postService.DeletePost(postId);
+
+            if (deleted)
+                return NoContent();
+
+            return NotFound();
+        }
+
     }
 }

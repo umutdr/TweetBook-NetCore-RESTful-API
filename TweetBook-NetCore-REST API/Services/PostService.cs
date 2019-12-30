@@ -15,18 +15,18 @@ namespace TweetBook_NetCore_REST_API.Services
             _posts = new List<Post>();
             for (var i = 0; i < 5; i++)
             {
-                _posts.Add(new Post { Id = Guid.NewGuid(), Name = "Post Name " + i + 1 });
+                _posts.Add(new Post { Id = Guid.NewGuid(), Name = "Post Name " + (i + 1) });
             }
-        }
-
-        public List<Post> GetPosts()
-        {
-            return _posts;
         }
 
         public Post GetPostById(Guid postId)
         {
             return _posts.SingleOrDefault(x => x.Id == postId);
+        }
+
+        public List<Post> GetPosts()
+        {
+            return _posts;
         }
 
         public bool UpdatePost(Post postToUpdate)
@@ -41,6 +41,18 @@ namespace TweetBook_NetCore_REST_API.Services
 
             return true;
 
+        }
+
+        public bool DeletePost(Guid postId)
+        {
+            var post = GetPostById(postId);
+
+            if (post == null)
+                return false;
+
+            _posts.Remove(post);
+
+            return true;
         }
     }
 }
