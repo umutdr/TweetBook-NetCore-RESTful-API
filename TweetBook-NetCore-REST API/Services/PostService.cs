@@ -51,8 +51,21 @@ namespace TweetBook_NetCore_REST_API.Services
                 return false;
 
             _dataContext.Posts.Remove(post);
-            var deleted = await  _dataContext.SaveChangesAsync();
+            var deleted = await _dataContext.SaveChangesAsync();
             return deleted > 0;
+        }
+
+        public async Task<bool> UserOwnsPostAsync(Guid postId, string UserId)
+        {
+            var post = await _dataContext.Posts.SingleOrDefaultAsync(x => x.Id == postId);
+
+            if (post == null)
+                return false;
+
+            if (post.UserId != UserId)
+                return false;
+
+            return true;
         }
     }
 }

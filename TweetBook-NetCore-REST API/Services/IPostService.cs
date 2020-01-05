@@ -13,5 +13,6 @@ namespace TweetBook_NetCore_REST_API.Services
         Task<bool> UpdatePostAsync(Post postToUpdate);
         Task<bool> DeletePostAsync(Guid postId);
         Task<bool> CreatePostAsync(Post post);
+        Task<bool> UserOwnsPostAsync(Guid postId, string UserId);
     }
 }

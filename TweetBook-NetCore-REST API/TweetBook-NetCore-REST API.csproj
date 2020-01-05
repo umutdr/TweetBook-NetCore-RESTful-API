@@ -5,6 +5,7 @@
     <UserSecretsId>aspnet-TweetBook_NetCore_REST_API-3DBEF818-F3A9-4053-9C5B-4A0DF385BEE1</UserSecretsId>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <RootNamespace>TweetBook_NetCore_REST_API</RootNamespace>
+    <LangVersion>7.1</LangVersion>
   </PropertyGroup>
 
 
