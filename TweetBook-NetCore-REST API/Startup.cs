@@ -46,6 +46,10 @@ namespace TweetBook_NetCore_REST_API
                 app.UseHsts();
             }
 
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
+            app.UseAuthentication();
+
             var swaggerOptions = new Options.SwaggerOptions();
             Configuration.GetSection(nameof(Options.SwaggerOptions)).Bind(swaggerOptions);
 
@@ -54,10 +58,6 @@ namespace TweetBook_NetCore_REST_API
             {
                 option.SwaggerEndpoint(swaggerOptions.UIEndPoint, swaggerOptions.Description);
             });
-
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
-
 
             app.UseMvc();
         }

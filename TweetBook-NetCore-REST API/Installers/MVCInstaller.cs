@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.Swagger;
 using TweetBook_NetCore_REST_API.Options;
+using TweetBook_NetCore_REST_API.Services;
 
 namespace TweetBook_NetCore_REST_API.Installers
 {
@@ -18,8 +19,10 @@ namespace TweetBook_NetCore_REST_API.Installers
         public void InstallServices(IServiceCollection services, IConfiguration configuration)
         {
             var jwtSettings = new JwtSettings();
-            configuration.Bind(key: nameof(jwtSettings), instance: jwtSettings);
+            configuration.Bind(nameof(jwtSettings), jwtSettings);
             services.AddSingleton(jwtSettings);
+
+            services.AddScoped<IIdentityService, IdentityService>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
@@ -55,7 +58,8 @@ namespace TweetBook_NetCore_REST_API.Installers
 
                 x.AddSecurityDefinition("Bearer", new ApiKeyScheme
                 {
-                    Description = "Authorization",
+                    Description = "JWT Authorization header using the bearer scheme",
+                    Name = "Authorization",
                     In = "header",
                     Type = "apiKey"
                 });
