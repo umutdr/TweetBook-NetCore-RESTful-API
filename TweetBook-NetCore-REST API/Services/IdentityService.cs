@@ -50,11 +50,42 @@ namespace TweetBook_NetCore_REST_API.Services
                 };
             }
 
+            return GetAuthenticationResultForUser(newUser);
+
+        }
+
+        public async Task<AuthenticationResult> LoginAsync(string email, string password)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                return new AuthenticationResult
+                {
+                    Errors = new[] { "User does not exists" },
+                };
+            }
+
+            var userHasValidPassword = await _userManager.CheckPasswordAsync(user, password);
+
+
+            if (!userHasValidPassword)
+            {
+                return new AuthenticationResult
+                {
+                    Errors = new[] { "User/Password Combination is wrong" },
+                };
+            }
+
+            return GetAuthenticationResultForUser(user);
+        }
+
+        private AuthenticationResult GetAuthenticationResultForUser(IdentityUser newUser)
+        {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_jwtSettings.Secret);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new []
+                Subject = new ClaimsIdentity(new[]
                 {
                     new Claim(JwtRegisteredClaimNames.Sub,newUser.Email),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
@@ -72,7 +103,6 @@ namespace TweetBook_NetCore_REST_API.Services
                 Success = true,
                 Token = tokenHandler.WriteToken(token)
             };
-
         }
     }
 }
