@@ -10,5 +10,7 @@ namespace TweetBook_NetCore_REST_API.Services
     {
         Task<AuthenticationResult> RegisterAsync(string email, string password);
         Task<AuthenticationResult> LoginAsync(string email, string password);
+        Task<AuthenticationResult> RefreshTokenAsync(string jwtToken, string refreshToken);
+
     }
 }

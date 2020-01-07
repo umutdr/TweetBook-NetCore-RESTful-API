@@ -8,5 +8,7 @@ namespace TweetBook_NetCore_REST_API.Options
     public class JwtSettings
     {
         public string Secret { get; set; }
+
+        public TimeSpan TokenLifeTime { get; set; }
     }
 }
